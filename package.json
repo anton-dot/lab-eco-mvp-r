@@ -1,0 +1,69 @@
+{
+  "name": "lumanagi-eco-mvp2",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@coinbase/wallet-sdk": "^3.7.1",
+    "@ethersproject/bignumber": "^5.7.0",
+    "@walletconnect/ethereum-provider": "1.8.0",
+    "@web3-react/coinbase-wallet": "^8.0.34-beta.0",
+    "@web3-react/core": "^8.0.35-beta.0",
+    "@web3-react/metamask": "^8.0.28-beta.0",
+    "@web3-react/network": "^8.0.27-beta.0",
+    "@web3-react/types": "^8.0.20-beta.0",
+    "@web3-react/walletconnect": "^8.0.35-beta.0",
+    "request": "^2.88.2",
+    "ajv": "^8.17.1",
+    "axios": "^1.7.7",
+    "buffer": "^6.0.3",
+    "concurrently": "^9.1.0",
+    "fs": "^0.0.1-security",
+    "ethers": "^5.7.2",
+    "notistack": "^3.0.1",
+    "react": "^18.3.1",
+    "react-custom-roulette": "^1.4.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
+    "react-jazzicon": "^1.0.4",
+    "react-router": "^6.26.0",
+    "react-router-dom": "^6.26.0",
+    "react-scripts": "5.0.1",
+    "react-spring": "^9.6.1",
+    "react-toastify": "^10.0.5",
+    "recharts": "^2.12.7",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "client": "set NODE_OPTIONS=--no-deprecation && set PORT=2468 && react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "server": "cd backend && npm run start",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "start-all": "npm install && npm install --prefix backend && npm run start"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "tailwindcss": "^3.4.7"
+  }
+}
