@@ -4,7 +4,10 @@ const logger = require('../utils/logger');
 
 exports.getMe = async (req, res, next) => {
   try {
-    const users = await UserModel.getUsersAddress({ address: req.address });
+    const users = req.address
+      ? await UserModel.getUsersAddress({ address: req.address })
+      : await UserModel.getUserByEmail(req.email);
+
     if (users.length === 0) {
       const { response, statusCode } = notFoundResponse('User not found');
       return res.status(statusCode).json(response);
@@ -13,6 +16,9 @@ exports.getMe = async (req, res, next) => {
     const user = users[0];
     const { response, statusCode } = successResponse({
       id: user.id,
+      firstName: user.first_name ?? '',
+      lastName: user.last_name ?? '',
+      email: user.email ?? '',
       address: user.address,
       token_balance: user.token_balance,
       MBUSD_balance: user.MBUSD_balance,

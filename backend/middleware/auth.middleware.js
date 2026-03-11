@@ -2,7 +2,13 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 
 function ensureWebToken(req, res, next) {
-  const token = req.headers['authorization'];
+  const header = req.headers['authorization'];
+  if (!header) {
+    return res.sendStatus(403);
+  }
+  const token = header.startsWith('Bearer ')
+    ? header.slice(7)
+    : header;
   if (!token) {
     return res.sendStatus(403);
   }
@@ -24,7 +30,13 @@ function ensureWebToken(req, res, next) {
 }
 
 function ensureWebTokenForAdmin(req, res, next) {
-  const token = req.headers['authorization'];
+  const header = req.headers['authorization'];
+  if (!header) {
+    return res.sendStatus(403);
+  }
+  const token = header.startsWith('Bearer ')
+    ? header.slice(7)
+    : header;
   if (!token) {
     return res.sendStatus(403);
   }

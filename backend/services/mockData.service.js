@@ -3,6 +3,14 @@
  * In-memory data storage for demo purposes (replaces MySQL database)
  */
 
+const crypto = require('crypto');
+
+const passHash = (password) => {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(password, salt, 64).toString('hex');
+  return `${salt}:${hash}`;
+};
+
 class MockDataService {
   constructor() {
     // Initialize in-memory data stores
@@ -18,7 +26,7 @@ class MockDataService {
     this.tickets = new Map();
     this.ticketMessages = new Map();
     this.sessions = new Map();
-    
+
     // Initialize with sample data
     this.initializeSampleData();
   }
@@ -36,6 +44,10 @@ class MockDataService {
     this.users.set(adminId, {
       id: adminId,
       address: '0x1234567890123456789012345678901234567890',
+      email: '',
+      first_name: 'admin',
+      last_name: 'admin',
+      password_hash: null,
       referral_code: 'ADMIN01',
       referral_id: null,
       token_balance: 10000,
@@ -49,10 +61,31 @@ class MockDataService {
     this.users.set(userId, {
       id: userId,
       address: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd',
+      email: '',
+      first_name: 'user',
+      last_name: 'user',
+      password_hash: null,
       referral_code: 'USER01',
       referral_id: null,
       token_balance: 5000,
       MBUSD_balance: 25000,
+      is_admin: 0,
+      datetime: new Date(),
+    });
+
+    // Sample email user
+    const emailUserId = 3;
+    this.users.set(emailUserId, {
+      id: emailUserId,
+      address: null,
+      email: 'test@mail.com',
+      first_name: 'Test',
+      last_name: 'User',
+      password_hash: passHash('12345678'),
+      referral_code: 'TEST01',
+      referral_id: null,
+      token_balance: 250,
+      MBUSD_balance: 500,
       is_admin: 0,
       datetime: new Date(),
     });
@@ -103,7 +136,7 @@ class MockDataService {
 
     // Counter for auto-increment IDs
     this.counters = {
-      users: 3,
+      users: 4,
       wallets: 2,
       staking: 2,
       stakingEarnings: 1,
@@ -120,6 +153,16 @@ class MockDataService {
   getUserByAddress(address) {
     for (const user of this.users.values()) {
       if (user.address.toLowerCase() === address.toLowerCase()) {
+        return [user];
+      }
+    }
+    return [];
+  }
+
+  getUserByEmail(email) {
+    const normalizedEmail = email.trim().toLowerCase();
+    for (const user of this.users.values()) {
+      if (user.email && user.email.toLowerCase() === normalizedEmail) {
         return [user];
       }
     }
@@ -144,7 +187,11 @@ class MockDataService {
     const id = this.counters.users++;
     const user = {
       id,
-      address: data.address,
+      address: data.address ?? null,
+      email: data.email ?? null,
+      first_name: data.first_name ?? null,
+      last_name: data.last_name ?? null,
+      password_hash: data.password_hash ?? null,
       referral_code: data.referral_code || `REF${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
       referral_id: data.referral_id || null,
       token_balance: 0,
@@ -249,7 +296,7 @@ class MockDataService {
         const unstakeDate = new Date(staking.created_date);
         unstakeDate.setDate(unstakeDate.getDate() + staking.staking_duration);
         const remainingSeconds = Math.max(0, Math.floor((unstakeDate.getTime() - Date.now()) / 1000));
-        
+
         stakings.push({
           ...staking,
           totalreward: totalReward,
@@ -587,9 +634,6 @@ class MockDataService {
     return Array.from(this.transactions.values()).sort((a, b) => b.id - a.id);
   }
 
-  getAllStaking() {
-    return Array.from(this.staking.values()).sort((a, b) => b.id - a.id);
-  }
 }
 
 // Export singleton instance

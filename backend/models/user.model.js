@@ -5,6 +5,10 @@ class UserModel {
     return mockData.getUserByAddress(data.address);
   }
 
+  async getUserByEmail(email) {
+    return mockData.getUserByEmail(email);
+  }
+
   async getUserDetailsByAddress(referralCode) {
     return mockData.getUserByReferralCode(referralCode);
   }
@@ -18,6 +22,10 @@ class UserModel {
   }
 
   async saveUserAddressDetails(data) {
+    return mockData.createUser(data);
+  }
+
+  async saveUserEmailDetails(data) {
     return mockData.createUser(data);
   }
 
@@ -210,7 +218,7 @@ class UserModel {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       createdDate.setHours(0, 0, 0, 0);
-      
+
       if (staking.status === 1 && createdDate < today) {
         return [{
           id: staking.id,
