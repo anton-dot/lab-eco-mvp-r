@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Backend",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "--watch",
+        "--inspect=9229",
+        "app.js"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*",
+          "endsPattern": ".*Debugger listening on ws://127\\.0\\.0\\.1:9229/.*|.*Server listening on port.*"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": false
+      }
+    },
+    {
+      "label": "Start Frontend",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npm.cmd",
+        "run",
+        "client"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*react-scripts start.*|.*Starting the development server.*",
+          "endsPattern": ".*Compiled successfully.*|.*webpack compiled successfully.*"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": false
+      }
+    }
+  ]
+}
