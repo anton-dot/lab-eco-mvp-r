@@ -35,6 +35,10 @@ const useAuth = () => {
 
   useEffect(() => {
     const token = localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE);
+    if (token) {
+      setIsAuthenticated(true);
+    }
+
     if (token && !user) {
       (async () => {
         try {

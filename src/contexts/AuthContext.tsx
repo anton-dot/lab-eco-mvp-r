@@ -4,6 +4,7 @@ import Login from "../components/auth/Login";
 import Register from "../components/auth/Register";
 import ForgotPassword from "../components/auth/ForgotPassword";
 import ChangePassword from "../components/auth/Change Password";
+import { ACCESS_TOKEN_LOCAL_STORAGE } from "../constants/common";
 
 export type AuthContextType = {
   user: IUser | null;
@@ -70,7 +71,9 @@ const AuthContextProvider = ({ children }: any) => {
   const [showModal, setShowModal] = useState(false);
   const [authAction, setAuthAction] = useState<AuthActionType | null>(null);
   const [user, setUser] = useState<IUser | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE)
+  );
 
   const Component = authAction?.component;
 
