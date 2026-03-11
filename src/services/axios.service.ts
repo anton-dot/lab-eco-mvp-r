@@ -1,6 +1,5 @@
 import axios from "axios";
 import { ACCESS_TOKEN_LOCAL_STORAGE } from "../constants/common";
-import { Navigate } from "react-router";
 
 const http = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
@@ -23,7 +22,7 @@ http.interceptors.response.use(
   (error) => {
     if (error.status === 401 || error.response.status === 401) {
       localStorage.removeItem(ACCESS_TOKEN_LOCAL_STORAGE);
-      Navigate({ to: "/" });
+      window.location.replace("/");
       return;
     }
     return Promise.reject(error);

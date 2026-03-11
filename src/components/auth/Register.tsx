@@ -29,12 +29,19 @@ const Register = () => {
   const onSubmit = async (data: any) => {
     try {
       setApiError("");
-      const result = await postApi("/auth", data);
-      login(result.data);
-      toggleModal();
+      await postApi("/auth/register", data);
+
+      const loginResult = await postApi("/auth/login", {
+        email: data.email,
+        password: data.password,
+      });
+
+      login(loginResult.data);
+      toggleModal(false);
+      window.location.replace("/profile");
     } catch (e: any) {
       console.log("Error: ", e?.response?.data || e);
-      setApiError(e?.response?.data?.message || "Invalid Credentials");
+      setApiError(e?.response?.data?.message || "registration failed");
     }
   };
 
@@ -115,9 +122,8 @@ const Register = () => {
         {FORM_FIELDS.map((item, index: number) => (
           <Fragment key={`register-form-${index}`}>
             <input
-              className={`flex w-full px-3 py-2 ${
-                index > 0 ? "mt-4" : ""
-              } text-white border rounded-lg focus:ring focus:ring-indigo-300 bg-foreground-night-100 border-foreground-night-400`}
+              className={`flex w-full px-3 py-2 ${index > 0 ? "mt-4" : ""
+                } text-white border rounded-lg focus:ring focus:ring-indigo-300 bg-foreground-night-100 border-foreground-night-400`}
               type={item.type}
               placeholder={item.label}
               {...register(item.fieldName, item.validation)}
