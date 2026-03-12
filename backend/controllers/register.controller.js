@@ -22,7 +22,7 @@ const ITERATIONS = 100;
 
 
 
-exports.userRegister = async (req, res) => {
+exports.userRegister = async (req, res, next) => {
 
     try {
         if (!req.body.address) {
@@ -32,12 +32,12 @@ exports.userRegister = async (req, res) => {
             });
         }
 
-        const varifyAddress = await verifyWalletAddress(req.body.address, req.body.signature);
+        const isValidAddress = await verifyWalletAddress(req.body.address, req.body.signature);
 
-        if (!varifyAddress.status) {
+        if (!isValidAddress) {
             return res.status(200).send({
                 success: false,
-                msg: varifyAddress.message
+                msg: "Wallet signature verification failed"
             });
         }
 
@@ -169,7 +169,7 @@ exports.getWithdrawHistory = async (req, res) => {
     try {
 
         req.body.user_id = req.user_id;
-        let getTransactionDetail = await UserModel.getwithdrawHistory(req.body);
+        let getTransactionDetail = await UserModel.getWithdrawHistory(req.body);
 
         if (getTransactionDetail.length > 0) {
 
@@ -362,7 +362,7 @@ exports.getStakingHistory = async (req, res) => {
     try {
         //
         req.body.user_id = req.user_id;
-        let getStakingDetail = await UserModel.getstakingHistory(req.body);
+        let getStakingDetail = await UserModel.getStakingHistory(req.body);
 
         if (getStakingDetail.length > 0) {
 
@@ -393,7 +393,7 @@ exports.getStakingHistory = async (req, res) => {
 exports.SingalClaimReward = async (req, res) => {
     try {
         req.body.user_id = req.user_id;
-        let rewardCheck = await UserModel.RewardClaimCheck(req.body);
+        let rewardCheck = await UserModel.rewardClaimCheck(req.body);
 
         if (rewardCheck.length == 0) {
             return res.status(200).send({
@@ -426,7 +426,7 @@ exports.SingalClaimReward = async (req, res) => {
             }
 
             req.body.token = myToken;
-            let stakingDetail = await UserModel.SingalRewardClaim(req.body);
+            let stakingDetail = await UserModel.singalRewardClaim(req.body);
 
 
             if (stakingDetail) {
@@ -466,7 +466,7 @@ exports.SellPlan = async (req, res) => {
 
         req.body.reward_token = parseFloat(checkSellPlan[0].reward_token) * parseFloat(checkSellPlan[0].remaining_quantity);
 
-        let stakingDetail = await UserModel.SellPlan(req.body);
+        let stakingDetail = await UserModel.sellPlan(req.body);
 
 
         if (stakingDetail) {
@@ -553,7 +553,7 @@ exports.getTotalInvested = async (req, res) => {
 
 
 
-exports.WithdrawCrypto = async (req, res) => {
+exports.WithdrawCrypto = async (req, res, next) => {
     try {
 
         req.body.user_id = req.user_id;
@@ -617,11 +617,11 @@ exports.WithdrawCrypto = async (req, res) => {
             req.body.fee = 0.3;
 
 
-            let busdDeposit = await UserModel.WithdrawCrypto(req.body);
+            let busdDeposit = await UserModel.withdrawCrypto(req.body);
 
             if (busdDeposit) {
 
-                await UserModel.balanceupdate(req.body);
+                await UserModel.balanceUpdate(req.body);
                 return res.status(200).send({
                     success: true,
                     msg: "Congratulations Your Withdraw Successfully!!",
@@ -694,7 +694,7 @@ exports.userBUSDDepositCheck = async () => {
                         user_id: data[i].user_id,
                         address: data[i].address
                     }
-                    await userModel.userBalanceUpdate(newData)
+                    await UserModel.userBalanceUpdate(newData)
 
 
 
@@ -722,7 +722,7 @@ exports.userBUSDDepositCheck = async () => {
                             user_id: getReferralUser[0].id
                         }
 
-                        await UserModel.addbalance(newToken);
+                        await UserModel.addBalance(newToken);
 
                     }
 
